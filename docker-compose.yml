@@ -1,0 +1,27 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app/frontend
+    command: ["bun", "run", "start"]
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app/backend
+    command: ["bun", "run", "index.ts"]
+
+  reverse-proxy:
+    image: reverse-proxy-image
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./Caddyfile:/Caddyfile # or Caddy configuration file
+    links:
+      - frontend
+      - backend
